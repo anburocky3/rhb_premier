@@ -1,4 +1,4 @@
-package com.rhbpremier.rhb_premier
+package com.rhbpremier
 
 import io.flutter.embedding.android.FlutterActivity
 

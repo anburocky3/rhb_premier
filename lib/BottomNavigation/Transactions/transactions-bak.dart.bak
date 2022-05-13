@@ -1,0 +1,243 @@
+
+import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rhb_premier/Theme/colors.dart';
+import 'package:rhb_premier/helpers/global.dart';
+import 'package:rhb_premier/models/Transaction.dart';
+import 'package:rhb_premier/providers/TransactionProvider.dart';
+import 'package:rhb_premier/services/api.dart';
+
+class Transactions extends StatefulWidget {
+  @override
+  _TransactionsState createState() => _TransactionsState();
+}
+
+// class Transact {
+//   String? title;
+//   String? subtitle;
+//   double price;
+//   bool isRed;
+//
+//   Transact(this.title, this.subtitle, this.price, this.isRed);
+// }
+
+class _TransactionsState extends State<Transactions> {
+
+  @override
+  Widget build(BuildContext context) {
+    // List<Transact> recentTransactions = [
+    //   Transact('Sunway Berhad', '12 Jan 2022', 21254652, true),
+    //   Transact(
+    //       'Received - Emili Williamson', '14 Dec 2021', 10000.00, false),
+    //   Transact('Tenaga Nasional Berhad', '10 Nov 2021', 1000524365, true),
+    //   Transact('Maintenance Fees', '08 Nov 2021', 1500, true),
+    //   Transact('Golden Harvest Berhad', '02 Oct 2021', 92566542, true),
+    //   Transact('Petronas Berhad', '05 Sept 2021', 74569875, true),
+    // ];
+
+    final provider = Provider.of<TransactionProvider>(context);
+    List<Transaction> transaction = provider.transactions;
+
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: Text('Transactions'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              color: Theme.of(context).primaryColor,
+              child: Column(
+                children: [
+                  FadedScaleAnimation(
+                    Container(
+                      padding:
+                      EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                            image: AssetImage('assets/bg.png'),
+                            fit: BoxFit.fill),
+                      ),
+                      child: Row(
+                        children: [
+                          RichText(
+                              text: TextSpan(children: <TextSpan>[
+                                TextSpan(
+                                    text: 'Suresh Gupta' + '\n',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1!
+                                        .copyWith(
+                                        color: textFieldBackground,
+                                        fontSize: 12)),
+                                TextSpan(
+                                    text: 'CIMBPB21222836201780',
+                                    style: TextStyle(
+                                        height: 1.4,
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor)
+                                  // style: Theme.of(context)
+                                  //     .textTheme
+                                  //     .headline6!
+                                  //     .copyWith(
+                                  //         color: Theme.of(context)
+                                  //             .scaffoldBackgroundColor,
+                                  //         height: 1.4),
+                                ),
+                              ])),
+                          Spacer(),
+                          RichText(
+                              text: TextSpan(children: <TextSpan>[
+                                TextSpan(
+                                    text: 'Available Balance' + '\n',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1!
+                                        .copyWith(
+                                        color: textFieldBackground,
+                                        fontSize: 12)),
+                                TextSpan(
+                                    text: '\$ 6,40,00K',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6!
+                                        .copyWith(
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                        height: 1.4)),
+                              ])),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12),
+              child: Text(
+                'Recent Transactions',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1!
+                    .copyWith(color: Theme.of(context).hintColor, fontSize: 12),
+              ),
+            ),
+            FutureBuilder<List<Transaction>>(
+              future: transaction.length,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        Transaction transaction = snapshot.data![index];
+                        return ListTile(
+                          title: Text(
+                            transaction.details!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1!
+                                .copyWith(fontWeight: FontWeight.w500),
+                          ),
+                          subtitle: Text(
+                            GlobalHelper.toHumanReadable(transaction.createdAt!)
+                                .toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle2!
+                                .copyWith(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: Theme.of(context).hintColor),
+                          ),
+                          trailing: Text(
+                            GlobalHelper.formatAmount(transaction.amount!),
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle2!
+                                .copyWith(
+                                color: (transaction.trxType == '-')
+                                    ? redColor
+                                    : secondaryColor),
+                          ),
+                          onTap: () {
+
+                          },
+                        );
+                      });
+                } else if (snapshot.hasError) {
+                  return Container(
+                    height: 140.00,
+                    child: Center(
+                      child: Text(
+                        'Something went wrong...',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  );
+                }
+
+                return Container(
+                  height: 140.00,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              },
+            )
+            // ListView.builder(
+            //     physics: NeverScrollableScrollPhysics(),
+            //     itemCount: recentTransactions.length,
+            //     shrinkWrap: true,
+            //     itemBuilder: (context, index) {
+            //       return ListTile(
+            //         title: Text(
+            //           recentTransactions[index].title!,
+            //           style: Theme
+            //               .of(context)
+            //               .textTheme
+            //               .subtitle1!
+            //               .copyWith(fontWeight: FontWeight.w500),
+            //         ),
+            //         subtitle: Text(
+            //           recentTransactions[index].subtitle!,
+            //           style: Theme
+            //               .of(context)
+            //               .textTheme
+            //               .subtitle2!
+            //               .copyWith(
+            //               fontWeight: FontWeight.w400,
+            //               fontSize: 12,
+            //               color: Theme
+            //                   .of(context)
+            //                   .hintColor),
+            //         ),
+            //         trailing: Text(
+            //           '\$ ' + recentTransactions[index].price.toString(),
+            //           style: Theme
+            //               .of(context)
+            //               .textTheme
+            //               .subtitle2!
+            //               .copyWith(
+            //               color: recentTransactions[index].isRed
+            //                   ? redColor
+            //                   : secondaryColor),
+            //         ),
+            //       );
+            //     })
+          ],
+        ),
+      ),
+    );
+  }
+}

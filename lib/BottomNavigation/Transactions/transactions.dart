@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rhb_premier/Theme/colors.dart';
@@ -26,11 +25,12 @@ class _TransactionsState extends State<Transactions> {
   }
 
   void getTransaction() async {
-    var authProvider = Provider.of<AuthProvider>(context, listen: false);
     var transactionProvider =
         Provider.of<TransactionProvider>(context, listen: false);
 
-    var response = await ApiService(authProvider.getToken).fetchTransactions();
+    transactionProvider.resetOnLoad();
+
+    var response = await ApiService().fetchTransactions();
     transactionProvider.setTransactionList(response);
 
     // await Future.delayed(Duration(milliseconds: 150));

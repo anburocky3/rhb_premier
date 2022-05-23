@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:animation_wrappers/Animations/faded_slide_animation.dart';
-import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -154,7 +153,7 @@ class _VerificationPageState extends State<VerificationPage> {
       // context.showSuccessBar(
       //     content: Text('Authentication verified!'));
 
-      Navigator.of(context).pushReplacementNamed(PageRoutes.homePage);
+      Navigator.of(context).pushReplacementNamed(PageRoutes.appNavigation);
 
       loader.complete();
     } catch (exception) {

@@ -6,10 +6,13 @@ import 'package:rhb_premier/Routes/routes.dart';
 import 'package:rhb_premier/Theme/style.dart';
 import 'package:rhb_premier/providers/AuthProvider.dart';
 import 'package:rhb_premier/providers/TransactionProvider.dart';
+import 'package:rhb_premier/service_locator.dart';
+import 'package:rhb_premier/services/navigation_service.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  setupLocator();
 
   runApp(MyApp());
 }
@@ -44,6 +47,7 @@ class _MyAppState extends State<MyApp> {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: Config.APP_NAME,
+            navigatorKey: locator<NavigationService>().navigatorKey,
             theme: appTheme,
             routes: PageRoutes().routes(),
           ),

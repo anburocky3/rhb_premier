@@ -10,6 +10,8 @@ class AppNavigation extends StatefulWidget {
   _AppNavigationState createState() => _AppNavigationState();
 }
 
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class _AppNavigationState extends State<AppNavigation> {
   int _currentIndex = 0;
 
@@ -45,20 +47,29 @@ class _AppNavigationState extends State<AppNavigation> {
         label: 'Account',
       ),
     ];
-    return Scaffold(
-      backgroundColor: blackColor,
-      body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: textFieldBackground,
+    return WillPopScope(
+      onWillPop: () async {
+        var canPop = navigatorKey.currentState!.canPop();
+        if (canPop) {
+          navigatorKey.currentState!.pop();
+        }
+        return !canPop;
+      },
+      child: Scaffold(
         backgroundColor: blackColor,
-        items: _items,
-        currentIndex: _currentIndex,
-        elevation: 15,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        body: _children[_currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          unselectedItemColor: textFieldBackground,
+          backgroundColor: blackColor,
+          items: _items,
+          currentIndex: _currentIndex,
+          elevation: 15,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+        ),
       ),
     );
   }

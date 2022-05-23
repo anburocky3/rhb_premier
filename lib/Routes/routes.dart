@@ -15,6 +15,8 @@ import 'package:rhb_premier/BottomNavigation/app_navigation.dart';
 import 'package:rhb_premier/providers/AuthProvider.dart';
 
 class PageRoutes {
+  static const String home = '/';
+  static const String forceLogin = 'login';
   static const String homePage = 'home_page';
   static const String securityCode = 'security_code';
   static const String appNavigation = 'app_navigation';
@@ -29,7 +31,7 @@ class PageRoutes {
 
   Map<String, WidgetBuilder> routes() {
     return {
-      '/': (context) {
+      home: (context) {
         final authProvider = Provider.of<AuthProvider>(context);
         if (authProvider.isAuthenticated) {
           return AppNavigation();
@@ -37,6 +39,7 @@ class PageRoutes {
           return LoginPage();
         }
       },
+      forceLogin: (context) => LoginPage(),
       securityCode: (context) =>
           VerificationPage(email: ModalRoute.of(context)?.settings.arguments),
       homePage: (context) => HomePage(),

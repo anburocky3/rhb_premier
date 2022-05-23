@@ -11,7 +11,7 @@ class AuthProvider extends ChangeNotifier {
   bool isAuthenticated = false;
   late String _token;
   late String _userData;
-  late ApiService apiService;
+  ApiService apiService = ApiService();
 
   AuthProvider() {
     init();
@@ -23,11 +23,12 @@ class AuthProvider extends ChangeNotifier {
     if (this._token.isNotEmpty) {
       this.isAuthenticated = true;
     }
-    this.apiService = new ApiService(this._token);
+    // this.apiService = new ApiService(this._token);
     notifyListeners();
   }
 
   String get getToken => _token;
+
   String get getUserData => _userData;
 
   Future<void> login(String email, String password, String deviceName) async {
@@ -53,16 +54,12 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logout() async {
-    // try {
-      await apiService.logout();
-    // } catch (e) {
-    //   print(e);
-    // }
+    await apiService.logout();
 
     this._token = '';
     this.isAuthenticated = false;
     Prefs.setToken(this._token);
-    print('emptied the token');
+
     notifyListeners();
   }
 

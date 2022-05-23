@@ -33,7 +33,7 @@ class User {
   String? image;
   Address? address;
   int? status;
-  Null? kycData;
+  KycData? kycData;
   int? kycv;
   int? ev;
   int? sv;
@@ -47,29 +47,29 @@ class User {
 
   User(
       {this.id,
-        this.accountNumber,
-        this.firstname,
-        this.lastname,
-        this.username,
-        this.email,
-        this.countryCode,
-        this.mobile,
-        this.refBy,
-        this.balance,
-        this.image,
-        this.address,
-        this.status,
-        this.kycData,
-        this.kycv,
-        this.ev,
-        this.sv,
-        this.verCode,
-        this.verCodeSendAt,
-        this.ts,
-        this.tv,
-        this.tsc,
-        this.createdAt,
-        this.updatedAt});
+      this.accountNumber,
+      this.firstname,
+      this.lastname,
+      this.username,
+      this.email,
+      this.countryCode,
+      this.mobile,
+      this.refBy,
+      this.balance,
+      this.image,
+      this.address,
+      this.status,
+      this.kycData,
+      this.kycv,
+      this.ev,
+      this.sv,
+      this.verCode,
+      this.verCodeSendAt,
+      this.ts,
+      this.tv,
+      this.tsc,
+      this.createdAt,
+      this.updatedAt});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -84,9 +84,11 @@ class User {
     balance = json['balance'];
     image = json['image'];
     address =
-    json['address'] != null ? new Address.fromJson(json['address']) : null;
+        json['address'] != null ? new Address.fromJson(json['address']) : null;
     status = json['status'];
-    kycData = json['kyc_data'];
+    kycData = json['kyc_data'] != null
+        ? new KycData.fromJson(json['kyc_data'])
+        : null;
     kycv = json['kycv'];
     ev = json['ev'];
     sv = json['sv'];
@@ -116,7 +118,9 @@ class User {
       data['address'] = this.address!.toJson();
     }
     data['status'] = this.status;
-    data['kyc_data'] = this.kycData;
+    if (this.kycData != null) {
+      data['kyc_data'] = this.kycData!.toJson();
+    }
     data['kycv'] = this.kycv;
     data['ev'] = this.ev;
     data['sv'] = this.sv;
@@ -155,3 +159,109 @@ class Address {
     return data;
   }
 }
+
+class KycData {
+  Photo? photo;
+  Photo? fullName;
+  Photo? fatherSName;
+  Photo? motherSName;
+  Photo? nid;
+
+  KycData(
+      {this.photo,
+      this.fullName,
+      this.fatherSName,
+      this.motherSName,
+      this.nid});
+
+  KycData.fromJson(Map<String, dynamic> json) {
+    photo = json['photo'] != null ? new Photo.fromJson(json['photo']) : null;
+    fullName = json['full_name'] != null
+        ? new Photo.fromJson(json['full_name'])
+        : null;
+    fatherSName = json["father's_name"] != null
+        ? new Photo.fromJson(json["father's_name"])
+        : null;
+    motherSName = json["mother's_name"] != null
+        ? new Photo.fromJson(json["mother's_name"])
+        : null;
+    nid = json['nid'] != null ? new Photo.fromJson(json['nid']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.photo != null) {
+      data['photo'] = this.photo!.toJson();
+    }
+    if (this.fullName != null) {
+      data['full_name'] = this.fullName!.toJson();
+    }
+    if (this.fatherSName != null) {
+      data["father's_name"] = this.fatherSName!.toJson();
+    }
+    if (this.motherSName != null) {
+      data["mother's_name"] = this.motherSName!.toJson();
+    }
+    if (this.nid != null) {
+      data['nid'] = this.nid!.toJson();
+    }
+    return data;
+  }
+}
+
+class Photo {
+  String? type;
+  String? value;
+
+  Photo({this.type, this.value});
+
+  Photo.fromJson(Map<String, dynamic> json) {
+    type = json['type'];
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['type'] = this.type;
+    data['value'] = this.value;
+    return data;
+  }
+}
+//
+// class KycData {
+//   Photo? photo;
+//   Photo? fullName;
+//   Photo? fatherSName;
+//   Photo? motherSName;
+//   Photo? nid;
+//
+//   KycData({this.photo, this.fullName, this.fatherSName, this.motherSName, this.nid});
+//
+//   KycData.fromJson(Map<String, dynamic> json) {
+//     photo = json['photo'] != null ? new Photo.fromJson(json['photo']) : null;
+//     fullName = json['full_name'] != null ? new Photo.fromJson(json['full_name']) : null;
+//     fatherSName = json["father's_name"] != null ? new Photo.fromJson(json["father's_name"]) : null;
+//     motherSName = json["mother's_name"] != null ? new Photo.fromJson(json["mother's_name"]) : null;
+//     nid = json['nid'] != null ? new Photo.fromJson(json['nid']) : null;
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     if (this.photo != null) {
+//       data['photo'] = this.photo!.toJson();
+//     }
+//     if (this.fullName != null) {
+//       data['full_name'] = this.fullName!.toJson();
+//     }
+//     if (this.fatherSName != null) {
+//       data["father's_name"] = this.fatherSName!.toJson();
+//     }
+//     if (this.motherSName != null) {
+//       data["mother's_name"] = this.motherSName!.toJson();
+//     }
+//     if (this.nid != null) {
+//       data['nid'] = this.nid!.toJson();
+//     }
+//     return data;
+//   }
+// }

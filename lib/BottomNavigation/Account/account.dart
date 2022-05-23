@@ -1,4 +1,3 @@
-
 import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,7 @@ import 'package:rhb_premier/Routes/routes.dart';
 import 'package:rhb_premier/helpers/PageLoader.dart';
 import 'package:rhb_premier/models/LoginResponse.dart';
 import 'package:rhb_premier/providers/AuthProvider.dart';
-import 'package:rhb_premier/sharedPreferences/Prefs.dart';
+import 'package:rhb_premier/services/api.dart';
 import 'package:rhb_premier/widgets/avatar.dart';
 
 class AccountPage extends StatefulWidget {
@@ -29,17 +28,22 @@ class _AccountPageState extends State<AccountPage> {
   @override
   void initState() {
     super.initState();
-    getUserData();
+    new Future.delayed(Duration.zero, () {
+      getUserData();
+    });
   }
 
   getUserData() async {
-    User? newUser = await Prefs.userData;
+    final loader = PageLoader(context);
+    loader.init();
+
+    final currentUser = await ApiService().getCurrentUser();
 
     setState(() {
-      _user = newUser!;
+      _user = currentUser;
     });
 
-    // print('userInfo: ${_user.firstname}');
+    loader.complete();
   }
 
   @override
@@ -112,13 +116,20 @@ class _AccountPageState extends State<AccountPage> {
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 leading: FadedScaleAnimation(
-                  RoundedAvatar(image: _user.image, height: 110,),
+                  RoundedAvatar(
+                    image: _user.image,
+                    height: 110,
+                  ),
                 ),
                 title: Text(
-                  "${_user.firstname} ${_user.lastname}",
-                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                      fontSize: 18,
-                      color: Theme.of(context).scaffoldBackgroundColor).copyWith(fontWeight: FontWeight.bold),
+                  "${_user.firstname ?? ''} ${_user.lastname ?? 'Loading...'}",
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2!
+                      .copyWith(
+                          fontSize: 18,
+                          color: Theme.of(context).scaffoldBackgroundColor)
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
                   'View Profile',

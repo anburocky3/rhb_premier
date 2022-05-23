@@ -11,9 +11,8 @@ class TransactionProvider extends ChangeNotifier {
 
   TransactionProvider(AuthProvider authProvider){
     this.authProvider = authProvider;
-    // this.apiService = ApiService(authProvider.token);
 
-    // init();
+    resetOnLoad();
   }
 
   bool get isLoaded => _isLoaded;
@@ -26,8 +25,10 @@ class TransactionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future init() async {
-  //   transactions = await apiService.fetchTransactions();
-  //   notifyListeners();
-  // }
+  resetOnLoad() {
+    _isLoaded = false;
+    _transaction = [];
+    notifyListeners();
+  }
+
 }

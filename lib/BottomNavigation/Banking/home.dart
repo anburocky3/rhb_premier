@@ -2,9 +2,10 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:rhb_premier/Routes/routes.dart';
 import 'package:rhb_premier/Theme/colors.dart';
+import 'package:rhb_premier/helpers/PageLoader.dart';
 import 'package:rhb_premier/helpers/global.dart';
 import 'package:rhb_premier/models/LoginResponse.dart';
-import 'package:rhb_premier/sharedPreferences/Prefs.dart';
+import 'package:rhb_premier/services/api.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -25,17 +26,22 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getUserData();
+    new Future.delayed(Duration.zero, () {
+      getUserData();
+    });
   }
 
   getUserData() async {
-    User? newUser = await Prefs.userData;
+    final loader = PageLoader(context);
+    loader.init();
+
+    final currentUser = await ApiService().getCurrentUser();
 
     setState(() {
-      _user = newUser!;
+      _user = currentUser;
     });
 
-    // print('userInfo: ${_user.firstname}');
+    loader.complete();
   }
 
   @override
@@ -106,17 +112,19 @@ class _HomePageState extends State<HomePage> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      "${_user.firstname} ${_user.lastname}",
+                                      "${_user.firstname ?? ''} ${_user.lastname ?? ''} ",
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle2!
-                                          .copyWith(color: textFieldBackground, fontSize: 18),
+                                          .copyWith(
+                                              color: textFieldBackground,
+                                              fontSize: 18),
                                     ),
                                     Padding(
-                                      padding:
-                                      const EdgeInsets.symmetric(vertical: 6.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 6.0),
                                       child: Text(
-                                        "Account No: ${_user.accountNumber}",
+                                        "Account No: ${_user.accountNumber ?? ''}",
                                         style: TextStyle(
                                             height: 1.4,
                                             fontSize: 18,
@@ -125,18 +133,17 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     Padding(
-                                      padding:
-                                      const EdgeInsets.symmetric(vertical: 4.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
                                       child: Text(
-                                        "Balance: ${GlobalHelper.formatAmount(
-                                            _user.balance ?? '00.00')}",
+                                          "Balance: ${GlobalHelper.formatAmount(_user.balance ?? '00.00')}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5!
                                               .copyWith(
-                                              color: Theme.of(context)
-                                                  .scaffoldBackgroundColor,
-                                              height: 1.4)),
+                                                  color: Theme.of(context)
+                                                      .scaffoldBackgroundColor,
+                                                  height: 1.4)),
                                     ),
                                     Spacer(),
                                     Text(
@@ -145,8 +152,8 @@ class _HomePageState extends State<HomePage> {
                                           .textTheme
                                           .bodyText1!
                                           .copyWith(
-                                          color:
-                                          Theme.of(context).primaryColor),
+                                              color: Theme.of(context)
+                                                  .primaryColor),
                                     ),
                                   ],
                                 ),

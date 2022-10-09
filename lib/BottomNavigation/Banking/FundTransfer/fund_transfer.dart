@@ -17,15 +17,15 @@ class _FundTransferState extends State<FundTransfer> {
   @override
   Widget build(BuildContext context) {
     List<Trans> transaction = [
-      Trans('Fund Transfer', 'Within Bank', () {
+      Trans('Fund Transfer Own Account', 'Within RHB Bank', () {
         // Navigator.pushNamed(context, PageRoutes.fundTransferWithinBank);
       }),
-      Trans('Fund Transfer', 'To Other Bank', () {}),
-      Trans('IMPS', 'Quick transfer mode', () {
+      Trans('Fund Transfer Other Account', 'Within RHB Bank Other Account', () {}),
+      Trans('DuitNow Pay', 'Quick Pay to Account by Bank', () {
         // Navigator.pushNamed(context, PageRoutes.impsQuickTransferMode);
       }),
-      Trans('NEFT', 'Transfer Money', () {}),
-      Trans('RTGS', 'Easiest mode to transfer money', () {}),
+      Trans('IBG Transfer (Real-Time)', 'Transfer to Other Bank Account', () {}),
+      Trans('FTT- Foreign Telegraphic Transfer', 'International Wire Transfer - SWIFT Mode', () {}),
     ];
     return Scaffold(
       appBar: AppBar(

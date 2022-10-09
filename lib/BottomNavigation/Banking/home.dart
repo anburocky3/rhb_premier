@@ -60,8 +60,8 @@ class _HomePageState extends State<HomePage> {
       Option('assets/icons/ic_loan.png', 'Loans', () {
         // Navigator.pushNamed(context, PageRoutes.loansPage);
       }),
-      Option('assets/icons/ic_deposite.png', 'Deposits', () {
-        Navigator.pushNamed(context, PageRoutes.deposits);
+      Option('assets/icons/ic_deposite.png', 'FDR', () {
+        // Navigator.pushNamed(context, PageRoutes.deposits);
       }),
       Option('assets/icons/ic_more.png', 'More', () {
         Navigator.pushNamed(context, PageRoutes.accountPage);

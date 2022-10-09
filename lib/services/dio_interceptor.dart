@@ -35,6 +35,7 @@ class AppInterceptors extends Interceptor {
         // navigatorKey.currentState.pushNamedAndRemoveUntil(
         //     "/", (Route<dynamic> route) => false);
       } catch (e) {
+        locator<NavigationService>().navigateTo(PageRoutes.forceLogin);
         print('DIO onError: ${err.message}');
       }
     }
